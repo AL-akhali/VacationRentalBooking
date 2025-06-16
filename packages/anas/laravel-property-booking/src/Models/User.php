@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -45,4 +46,26 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // public function properties()
+    // {
+    //     return $this->hasMany(Property::class);
+    // }
+
+    // التحقق من الدور
+    public function isHost(): bool
+    {
+        return $this->role === 'host';
+    }
+
+    public function isGuest(): bool
+    {
+        return $this->role === 'guest';
+    }
+
+    // public function bookings()
+    // {
+    //     return $this->hasMany(Booking::class);
+    // }
+
 }
