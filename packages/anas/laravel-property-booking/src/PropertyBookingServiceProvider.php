@@ -10,6 +10,7 @@ class PropertyBookingServiceProvider extends ServiceProvider
     {
         // تحميل المسارات، التراجم، الـ views، الـ config، الخ..
         $this->loadRoutesFrom(__DIR__.'/../routes/property-booking.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 

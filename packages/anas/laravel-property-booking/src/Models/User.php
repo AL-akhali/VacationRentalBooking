@@ -40,6 +40,12 @@ class User extends Authenticatable
         return $this->role === 'guest';
     }
 
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
+
+
     public static function newFactory()
     {
         return \Database\Factories\UserFactory::new();

@@ -5,7 +5,9 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Anas\\PropertyBooking\\": "src/"
+      "Anas\\PropertyBooking\\": "src/",
+      "Anas\\PropertyBooking\\Database\\Seeders\\": "database/seeders/"
+
     }
   },
   "autoload-dev": {
