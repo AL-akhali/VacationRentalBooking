@@ -45,7 +45,10 @@ class User extends Authenticatable
         return $this->hasMany(Property::class);
     }
 
-
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
     public static function newFactory()
     {
         return \Database\Factories\UserFactory::new();
