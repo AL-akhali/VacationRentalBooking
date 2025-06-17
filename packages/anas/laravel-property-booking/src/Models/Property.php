@@ -22,4 +22,10 @@ class Property extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function availabilities()
+    {
+        return $this->hasMany(PropertyAvailability::class);
+    }
+
 }

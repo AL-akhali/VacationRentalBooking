@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Anas\PropertyBooking\Http\Controllers\Api\PropertyController;
+use Anas\PropertyBooking\Http\Controllers\Api\PropertyAvailabilityController;
+
 
 Route::middleware('api')->prefix('api')->group(function () {
 
@@ -10,12 +12,7 @@ Route::middleware('api')->prefix('api')->group(function () {
         return ['msg' => 'Package API is working'];
     });
 
-    Route::prefix('properties')->group(function () {
-        Route::get('/', [PropertyController::class, 'index']);
-        Route::get('/{id}', [PropertyController::class, 'show']);
-        Route::post('/', [PropertyController::class, 'store']);
-        Route::put('/{id}', [PropertyController::class, 'update']);
-        Route::delete('/{id}', [PropertyController::class, 'destroy']);
-    });
+        Route::apiResource('properties', PropertyController::class);
+        Route::apiResource('property-availabilities', PropertyAvailabilityController::class);
 
 });
