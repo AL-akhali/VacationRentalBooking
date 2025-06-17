@@ -28,4 +28,10 @@ class Property extends Model
         return $this->hasMany(PropertyAvailability::class);
     }
 
+    public function pricingRules()
+    {
+        return $this->hasMany(PropertyPricingRule::class);
+    }
+
+
 }
