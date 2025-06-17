@@ -8,6 +8,11 @@
       "Anas\\PropertyBooking\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+        "Anas\\PropertyBooking\\Tests\\": "packages/anas/laravel-property-booking/tests"
+    }
+},
   "extra": {
     "laravel": {
       "providers": [

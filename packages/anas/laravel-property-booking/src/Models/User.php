@@ -1,44 +1,27 @@
 <?php
 
-namespace App\Models;
+namespace Anas\PropertyBooking\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role'
+        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -47,12 +30,6 @@ class User extends Authenticatable
         ];
     }
 
-    // public function properties()
-    // {
-    //     return $this->hasMany(Property::class);
-    // }
-
-    // التحقق من الدور
     public function isHost(): bool
     {
         return $this->role === 'host';
@@ -63,9 +40,8 @@ class User extends Authenticatable
         return $this->role === 'guest';
     }
 
-    // public function bookings()
-    // {
-    //     return $this->hasMany(Booking::class);
-    // }
-
+    public static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
 }

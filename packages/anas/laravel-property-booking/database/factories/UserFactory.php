@@ -2,25 +2,26 @@
 
 namespace Database\Factories;
 
+use Anas\PropertyBooking\Models\User; // ✅ تأكد من أنك تشير لموديل الباكيج
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<\Anas\PropertyBooking\Models\User>
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * ربط الفاكتوري بموديل المستخدم الصحيح داخل الباكيج
      */
+    public function modelName(): string
+    {
+        return User::class;
+    }
+
     public function definition(): array
     {
         return [
@@ -30,13 +31,9 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => fake()->randomElement(['host', 'guest']),
-
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn(array $attributes) => [
