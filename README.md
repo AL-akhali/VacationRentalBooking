@@ -7,9 +7,9 @@ It allows hosts to control which dates are available for booking.
 
 ## ✅ Objectives
 
-- Create a model and table for `PropertyAvailability`.
+- Create a model and table for `Booking`.
 - Create Api CRUD
-- Define a relationship between `Property` and its availability dates.
+- Define a relationship between `Property` and its Booking dates.
 - Allow setting whether a property is available on a given day.
 - 30 days of availability per property.
 
