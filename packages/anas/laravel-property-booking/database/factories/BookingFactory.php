@@ -25,7 +25,8 @@ class BookingFactory extends Factory
             'user_id' => $user->id,
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
-            'status' => $this->faker->randomElement(['pending', 'confirmed', 'paid', 'checked_in', 'cancelled']),
+            'status' => 'pending',
+
             'special_request' => $this->faker->optional()->sentence(),
         ];
     }
