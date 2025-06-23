@@ -68,4 +68,25 @@ class Booking extends Model
         $this->save();
     }
 
+    public const PAYMENT_PENDING = 'pending';
+    public const PAYMENT_PAID = 'paid';
+    public const PAYMENT_FAILED = 'failed';
+
+    public static function paymentStatuses(): array
+    {
+        return [
+            self::PAYMENT_PENDING,
+            self::PAYMENT_PAID,
+            self::PAYMENT_FAILED,
+        ];
+    }
+
+    public function markAsPaid(string $reference): void
+    {
+        $this->payment_status = self::PAYMENT_PAID;
+        $this->payment_reference = $reference;
+        $this->status = self::STATUS_PAID;
+        $this->save();
+    }
+
 }

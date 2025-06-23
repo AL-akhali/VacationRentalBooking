@@ -3,35 +3,25 @@
 namespace Anas\PropertyBooking\Http\Controllers\Api;
 
 use Anas\PropertyBooking\Models\Property;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class PropertyController extends Controller
 {
     public function index()
     {
-        $properties = Property::all();
-        return response()->json($properties);
-    }
-
-    public function show($id)
-    {
-        $property = Property::find($id);
-        if (!$property) {
-            return response()->json(['message' => 'Property not found'], 404);
-        }
-        return response()->json($property);
+        return response()->json(Property::with(['host', 'availabilities', 'pricingRules', 'bookings'])->get());
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'capacity' => 'nullable|integer',
-            'price_per_night' => 'required|numeric',
+            'user_id'         => ['required', 'exists:users,id'],
+            'title'           => ['required', 'string'],
+            'description'     => ['required', 'string'],
+            'location'        => ['required', 'string'],
+            'capacity'        => ['required', 'integer', 'min:1'],
+            'price_per_night' => ['required', 'numeric', 'min:0'],
         ]);
 
         $property = Property::create($validated);
@@ -39,35 +29,44 @@ class PropertyController extends Controller
         return response()->json($property, 201);
     }
 
-    public function update(Request $request, $id)
+    public function show(Property $property)
     {
-        $property = Property::find($id);
-        if (!$property) {
-            return response()->json(['message' => 'Property not found'], 404);
-        }
+        return response()->json($property->load(['host', 'availabilities', 'pricingRules', 'bookings']));
+    }
 
+    public function update(Request $request, Property $property)
+    {
         $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'location' => 'sometimes|nullable|string|max:255',
-            'capacity' => 'sometimes|nullable|integer',
-            'price_per_night' => 'sometimes|required|numeric',
+            'title'           => ['sometimes', 'string'],
+            'description'     => ['sometimes', 'string'],
+            'location'        => ['sometimes', 'string'],
+            'capacity'        => ['sometimes', 'integer', 'min:1'],
+            'price_per_night' => ['sometimes', 'numeric', 'min:0'],
         ]);
 
         $property->update($validated);
 
-        return response()->json($property);
+        return response()->json($property->fresh());
     }
 
-    public function destroy($id)
+    public function destroy(Property $property)
     {
-        $property = Property::find($id);
-        if (!$property) {
-            return response()->json(['message' => 'Property not found'], 404);
-        }
-
         $property->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Deleted successfully']);
+    }
+
+    public function checkAvailability(Request $request, Property $property)
+    {
+        $validated = $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date'   => ['required', 'date', 'after:start_date'],
+        ]);
+
+        $isAvailable = $property->isAvailableForDates($validated['start_date'], $validated['end_date']);
+
+        return response()->json([
+            'available' => $isAvailable,
+        ]);
     }
 }

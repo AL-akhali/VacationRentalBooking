@@ -17,11 +17,15 @@ Route::middleware('api')->prefix('api')->group(function () {
 
     Route::apiResource('properties', PropertyController::class);
     Route::apiResource('property-availabilities', PropertyAvailabilityController::class);
+    Route::get('properties/{property}/check-availability', [PropertyController::class, 'checkAvailability']);
+
     Route::apiResource('properties/{property}/pricing-rules', PropertyPricingRuleController::class);
     Route::prefix('bookings')->middleware('auth:sanctum')->group(function () {
         Route::post('/', [BookingController::class, 'store']); // guest يحجز
         Route::get('/my', [BookingController::class, 'myBookings']); // guest
         Route::patch('{booking}/status', [BookingController::class, 'updateStatus']); // host أو admin
+        Route::post('{booking}/pay', [BookingController::class, 'pay']);
+
     });
 
 

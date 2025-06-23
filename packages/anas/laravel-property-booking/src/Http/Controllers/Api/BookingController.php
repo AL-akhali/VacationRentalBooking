@@ -69,4 +69,21 @@ class BookingController extends Controller
             'booking' => $booking,
         ]);
     }
+
+    public function pay(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'payment_reference' => 'required|string|max:255',
+        ]);
+
+        // يمكن إضافة تحقق صلاحيات هنا
+
+        $booking->markAsPaid($request->payment_reference);
+
+        return response()->json([
+            'message' => 'Payment successful, booking status updated to paid.',
+            'booking' => $booking,
+        ]);
+    }
+
 }
