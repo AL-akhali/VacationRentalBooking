@@ -86,4 +86,59 @@ class BookingController extends Controller
         ]);
     }
 
+    public function hostBookings()
+    {
+        $user = auth()->user();
+
+        // نجلب كل الحجوزات للعقارات التي يملكها المضيف
+        $bookings = Booking::whereHas('property', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->with(['property', 'user'])
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        return response()->json($bookings);
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+        $user = auth()->user();
+
+        // تحقق: فقط مالك العقار يمكنه التحديث
+        if ($booking->property->user_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'status' => 'in:' . implode(',', Booking::statuses()),
+            'special_request' => 'string|nullable|max:1000',
+        ]);
+
+        $booking->update($request->only('status', 'special_request'));
+
+        return response()->json([
+            'message' => 'Booking updated',
+            'booking' => $booking,
+        ]);
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $user = auth()->user();
+
+        // تحقق: فقط مالك العقار أو صاحب الحجز يمكنه الإلغاء
+        if ($booking->property->user_id !== $user->id && $booking->user_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $booking->status = Booking::STATUS_CANCELLED;
+        $booking->save();
+
+        return response()->json([
+            'message' => 'Booking cancelled',
+            'booking' => $booking,
+        ]);
+    }
+
 }

@@ -25,6 +25,13 @@ Route::middleware('api')->prefix('api')->group(function () {
         Route::get('/my', [BookingController::class, 'myBookings']); // guest
         Route::patch('{booking}/status', [BookingController::class, 'updateStatus']); // host أو admin
         Route::post('{booking}/pay', [BookingController::class, 'pay']);
+        Route::get('/host', [BookingController::class, 'hostBookings']); // عرض حجوزات المضيف
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::patch('{booking}', [BookingController::class, 'update']);
+            Route::delete('{booking}', [BookingController::class, 'destroy']);
+        });
+
+
 
     });
 
