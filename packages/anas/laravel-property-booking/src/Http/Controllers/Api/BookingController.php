@@ -21,6 +21,14 @@ class BookingController extends Controller
             'special_request' => 'nullable|string|max:1000',
         ]);
 
+        $property = Property::findOrFail($request->property_id);
+
+        if (!$property->isAvailableForDates($request->start_date, $request->end_date)) {
+            throw ValidationException::withMessages([
+                'date_range' => 'The property is not available for the selected dates.',
+            ]);
+        }
+
         // تحقق من التوفر (ستُضاف في الفرع 08)
         $booking = Booking::create([
             'user_id' => Auth::id(),

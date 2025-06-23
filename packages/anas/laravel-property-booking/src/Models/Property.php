@@ -38,4 +38,24 @@ class Property extends Model
         return $this->hasMany(Booking::class);
     }
 
+    public function isAvailableForDates($startDate, $endDate): bool
+    {
+        $start = \Carbon\Carbon::parse($startDate);
+        $end = \Carbon\Carbon::parse($endDate);
+
+        $daysCount = $start->diffInDays($end);
+
+        // عدد الأيام المتوقع توفرها
+        $expected = $daysCount;
+
+        // نتحقق من أن كل يوم بين start و end متوفر (is_available = 1)
+        $availableCount = $this->availabilities()
+            ->where('date', '>=', $start->toDateString())
+            ->where('date', '<', $end->toDateString())
+            ->where('is_available', true)
+            ->count();
+
+        return $availableCount === $expected;
+    }
+
 }
